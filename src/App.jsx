@@ -1,44 +1,41 @@
-import { useState, useEffect, useRef } from "react";
-
-// ===== DATA LAYER =====
+// ===== DATA LAYER (LOCAL STORAGE) =====
 const DB = {
   async getClients() {
-    try { const r = await window.storage.get("ag_clients"); return r ? JSON.parse(r.value) : []; } catch { return []; }
+    try {
+      const data = localStorage.getItem("ag_clients");
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   },
+
   async saveClients(data) {
-    try { await window.storage.set("ag_clients", JSON.stringify(data)); } catch(e) { console.error(e); }
+    try {
+      localStorage.setItem("ag_clients", JSON.stringify(data));
+    } catch (e) {
+      console.error(e);
+    }
   },
+
   async getTransactions() {
-    try { const r = await window.storage.get("ag_transactions"); return r ? JSON.parse(r.value) : []; } catch { return []; }
+    try {
+      const data = localStorage.getItem("ag_transactions");
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   },
+
   async saveTransactions(data) {
-    try { await window.storage.set("ag_transactions", JSON.stringify(data)); } catch(e) { console.error(e); }
+    try {
+      localStorage.setItem("ag_transactions", JSON.stringify(data));
+    } catch (e) {
+      console.error(e);
+    }
   }
 };
-
-const COMPANY = "شركة أبو القاسم جويرك";
-
-// ===== بيانات تسجيل الدخول — غيّرها كما تشاء =====
-const AUTH = { username: "admin", password: "admin1234adminpassword" };
-
-// ===== شاشة تسجيل الدخول =====
-function LoginScreen({ onLogin }) {
-  const [user, setUser]   = useState("");
-  const [pass, setPass]   = useState("");
-  const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState("");
-  const [shaking, setShaking] = useState(false);
-
-  const submit = () => {
-    if (user === AUTH.username && pass === AUTH.password) {
-      onLogin();
-    } else {
-      setError("اسم المستخدم أو كلمة المرور غير صحيحة");
-      setShaking(true);
-      setTimeout(() => setShaking(false), 600);
-    }
-  };
-
   const onKey = (e) => { if (e.key === "Enter") submit(); };
 
   return (
